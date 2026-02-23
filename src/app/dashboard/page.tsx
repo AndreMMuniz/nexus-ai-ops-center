@@ -8,6 +8,8 @@ import { MetricsOverview } from "@/components/dashboard/MetricsOverview";
 import { LiveTerminalPanel } from "@/components/dashboard/LiveTerminalPanel";
 import { ServiceControls } from "@/components/dashboard/ServiceControls";
 import { ClusterResources, ActiveEndpoints } from "@/components/dashboard/ClusterResources";
+import { RAGStats } from "@/components/dashboard/RAGStats";
+import { TopicAnalytics } from "@/components/dashboard/TopicAnalytics";
 
 interface LogEntry {
     timestamp: string;
@@ -129,14 +131,22 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Service Controls Column */}
-                <div className="lg:col-span-1">
+                <div className="lg:col-span-1 flex flex-col gap-6">
+                    <ActiveEndpoints topEndpoints={stats.topEndpoints} />
                     <ServiceControls statusData={status} />
                 </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <ActiveEndpoints topEndpoints={stats.topEndpoints} />
-                <ClusterResources />
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="lg:col-span-2">
+                    <RAGStats />
+                </div>
+                <div className="lg:col-span-1">
+                    <TopicAnalytics />
+                </div>
+                <div className="lg:col-span-1">
+                    <ClusterResources />
+                </div>
             </div>
 
             <footer className="mt-8 text-center pb-8">

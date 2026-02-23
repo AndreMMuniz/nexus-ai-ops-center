@@ -63,6 +63,28 @@ export async function getTokenUsage() {
     }
 }
 
+export async function getRagStats() {
+    try {
+        const res = await backendFetch("/api/ops/rag-stats", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to fetch RAG stats");
+        return await res.json();
+    } catch (error) {
+        console.error("RAG stats error:", error);
+        return { total_chunks: 0, sources: [] };
+    }
+}
+
+export async function getAnalyticsTopics() {
+    try {
+        const res = await backendFetch("/api/ops/analytics/topics", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to fetch analytics topics");
+        return await res.json();
+    } catch (error) {
+        console.error("Analytics topics error:", error);
+        return { topics: [] };
+    }
+}
+
 export async function fetchOpsLogs() {
     try {
         const res = await backendFetch("/api/ops/logs", { cache: "no-store" });
