@@ -37,10 +37,15 @@ export function RAGStats() {
     }, []);
 
     const formatSourceName = (path: string) => {
-        const parts = path.replace(/\\/g, "/").split("/");
-        const filename = parts[parts.length - 1] || path;
-        // Remove file extension for cleaner display
-        return filename.replace(/\.\w+$/, "");
+        const raw = path.replace(/\\/g, "/");
+        const parts = raw.split("/");
+        const filename = parts[parts.length - 1] || raw;
+        // If the name is purely numeric, label it as a document ID
+        if (/^\d+$/.test(filename)) {
+            return `Doc #${filename}`;
+        }
+        // Remove file extension and underscores for cleaner display
+        return filename.replace(/\.\w+$/, "").replace(/_/g, " ");
     };
 
     // Group: take top 5 sources, merge the rest into "Others"
