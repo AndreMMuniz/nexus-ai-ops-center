@@ -4,7 +4,7 @@ export async function fetchOpsStatus() {
     try {
         const res = await fetch(`${process.env.BACKEND_URL}/api/ops/status`, {
             headers: {
-                "x-api-key": process.env.AUTH_SECRET || "A3B49E7C0F12D58A9B48E67F1C98D20E", // In a real app we'll sync this key
+                "x-api-key": process.env.BACKEND_API_KEY || "",
             },
             next: { revalidate: 10 }
         });
@@ -19,7 +19,7 @@ export async function fetchOpsLogs() {
     try {
         const res = await fetch(`${process.env.BACKEND_URL}/api/ops/logs`, {
             headers: {
-                "x-api-key": process.env.AUTH_SECRET || "A3B49E7C0F12D58A9B48E67F1C98D20E",
+                "x-api-key": process.env.BACKEND_API_KEY || "",
             },
             cache: 'no-store'
         });
