@@ -58,18 +58,21 @@ export default function DashboardPage() {
             return {
                 latency: 0,
                 successRate: 100,
-                topEndpoints: []
+                topEndpoints: [],
+                tokensUsage: "0"
             };
         }
 
         // Latency & Success
         let totalLatency = 0;
         let successCount = 0;
+        let totalTokens = 0;
         const endpointCounts: Record<string, number> = {};
 
         apiLogs.forEach(log => {
             if (log.latency) totalLatency += Number(log.latency);
             if (log.status === "success" || log.status === 200) successCount++;
+            if (log.tokens) totalTokens += Number(log.tokens);
 
             // Extract a pseudo-endpoint or route from exactly what was queried
             let route = log.query || "/v1/chat";
@@ -86,10 +89,21 @@ export default function DashboardPage() {
             .sort((a, b) => b.count - a.count)
             .slice(0, 5); // Take top 5
 
+        // Format Tokens Usage (e.g., 12500 -> 12.5k)
+        let formattedTokens = "0";
+        if (totalTokens >= 1000000) {
+            formattedTokens = (totalTokens / 1000000).toFixed(1) + "M";
+        } else if (totalTokens >= 1000) {
+            formattedTokens = (totalTokens / 1000).toFixed(1) + "k";
+        } else {
+            formattedTokens = totalTokens.toString();
+        }
+
         return {
             latency: avgLatency,
             successRate,
-            topEndpoints
+            topEndpoints,
+            tokensUsage: formattedTokens
         };
     };
 
@@ -101,7 +115,7 @@ export default function DashboardPage() {
                 totalRequests={apiLogs.length}
                 apiLatency={stats.latency}
                 successRate={stats.successRate}
-                tokensUsage={metrics.tokens_usage}
+                tokensUsage={stats.tokensUsage}
             />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
