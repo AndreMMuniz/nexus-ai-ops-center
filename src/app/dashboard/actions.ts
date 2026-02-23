@@ -219,7 +219,7 @@ export async function sendTerminalInput(input: string) {
     try {
         const res = await backendFetch("/api/ops/terminal", {
             method: "POST",
-            body: JSON.stringify({ action: "input", input }),
+            body: JSON.stringify({ action: "input", input: input + "\n" }),
         });
         return await res.json();
     } catch {
