@@ -122,11 +122,7 @@ export default function DashboardPage() {
 
             <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <ActiveEndpoints topEndpoints={stats.topEndpoints} />
-                <ClusterResources
-                    cpu={metrics.cpu_usage}
-                    memory={metrics.memory_usage}
-                    storage={metrics.storage_usage}
-                />
+                <ClusterResources />
             </div>
 
             <footer className="mt-8 text-center pb-8">

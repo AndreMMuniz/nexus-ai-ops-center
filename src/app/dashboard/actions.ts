@@ -41,6 +41,17 @@ export async function fetchOpsMetrics() {
     }
 }
 
+export async function getSystemResources() {
+    try {
+        const res = await backendFetch("/api/ops/resources", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to fetch resources");
+        return await res.json();
+    } catch (error) {
+        console.error("Resources error:", error);
+        return { cpu: 0, memory: 0, storage: 0 };
+    }
+}
+
 export async function fetchOpsLogs() {
     try {
         const res = await backendFetch("/api/ops/logs", { cache: "no-store" });

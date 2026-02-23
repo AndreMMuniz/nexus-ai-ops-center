@@ -1,4 +1,6 @@
+import { useState, useEffect } from "react";
 import { MoreVertical, Activity } from "lucide-react";
+import { getSystemResources } from "@/app/dashboard/actions";
 
 export function ActiveEndpoints({
     topEndpoints = []
@@ -35,11 +37,23 @@ export function ActiveEndpoints({
     );
 }
 
-export function ClusterResources({
-    cpu = 0,
-    memory = 0,
-    storage = 0
-}) {
+export function ClusterResources() {
+    const [stats, setStats] = useState({ cpu: 0, memory: 0, storage: 0 });
+
+    useEffect(() => {
+        let isMounted = true;
+        const fetchResources = async () => {
+            const data = await getSystemResources();
+            if (isMounted) setStats(data);
+        };
+        fetchResources();
+        const interval = setInterval(fetchResources, 2000);
+        return () => {
+            isMounted = false;
+            clearInterval(interval);
+        };
+    }, []);
+
     return (
         <div className="border border-[#1F2937] rounded-xl p-6" style={{ background: "rgba(17, 24, 39, 0.75)", backdropFilter: "blur(12px)" }}>
             <div className="flex items-center justify-between mb-4">
@@ -51,30 +65,30 @@ export function ClusterResources({
                 <div>
                     <div className="flex justify-between text-xs mb-1">
                         <span className="text-gray-400">CPU Usage</span>
-                        <span className="text-white">{cpu}%</span>
+                        <span className="text-white">{stats.cpu}%</span>
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-1.5">
-                        <div className="bg-[#3B82F6] h-1.5 rounded-full transition-all duration-1000" style={{ width: `${Math.min(100, cpu)}%` }}></div>
+                        <div className="bg-[#3B82F6] h-1.5 rounded-full transition-all duration-1000" style={{ width: `${Math.min(100, stats.cpu)}%` }}></div>
                     </div>
                 </div>
 
                 <div>
                     <div className="flex justify-between text-xs mb-1">
                         <span className="text-gray-400">Memory</span>
-                        <span className="text-white">{memory}%</span>
+                        <span className="text-white">{stats.memory}%</span>
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-1.5">
-                        <div className="bg-purple-500 h-1.5 rounded-full transition-all duration-1000" style={{ width: `${Math.min(100, memory)}%` }}></div>
+                        <div className="bg-purple-500 h-1.5 rounded-full transition-all duration-1000" style={{ width: `${Math.min(100, stats.memory)}%` }}></div>
                     </div>
                 </div>
 
                 <div>
                     <div className="flex justify-between text-xs mb-1">
                         <span className="text-gray-400">Storage</span>
-                        <span className="text-white">{storage}%</span>
+                        <span className="text-white">{stats.storage}%</span>
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-1.5">
-                        <div className="bg-[#00DC82] h-1.5 rounded-full transition-all duration-1000" style={{ width: `${Math.min(100, storage)}%` }}></div>
+                        <div className="bg-[#00DC82] h-1.5 rounded-full transition-all duration-1000" style={{ width: `${Math.min(100, stats.storage)}%` }}></div>
                     </div>
                 </div>
             </div>
