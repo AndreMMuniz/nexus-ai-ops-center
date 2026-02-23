@@ -1,32 +1,143 @@
-"use server"
+"use server";
+
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000";
+const API_KEY = process.env.BACKEND_API_KEY || "";
+
+async function backendFetch(path: string, options?: RequestInit) {
+    return fetch(`${BACKEND_URL}${path}`, {
+        ...options,
+        headers: {
+            "x-api-key": API_KEY,
+            "Content-Type": "application/json",
+            ...options?.headers,
+        },
+    });
+}
 
 export async function fetchOpsStatus() {
     try {
-        const res = await fetch(`${process.env.BACKEND_URL}/api/ops/status`, {
-            headers: {
-                "x-api-key": process.env.BACKEND_API_KEY || "",
-            },
-            next: { revalidate: 10 }
-        });
+        const res = await backendFetch("/api/ops/status", { next: { revalidate: 10 } } as any);
         if (!res.ok) throw new Error("Failed");
         return await res.json();
-    } catch (error) {
+    } catch {
         return { status: "offline", agent_initialized: false };
     }
 }
 
 export async function fetchOpsLogs() {
     try {
-        const res = await fetch(`${process.env.BACKEND_URL}/api/ops/logs`, {
-            headers: {
-                "x-api-key": process.env.BACKEND_API_KEY || "",
-            },
-            cache: 'no-store'
-        });
+        const res = await backendFetch("/api/ops/logs", { cache: "no-store" });
         if (!res.ok) throw new Error("Failed");
         const data = await res.json();
         return data.logs || [];
-    } catch (error) {
+    } catch {
         return [];
+    }
+}
+
+export async function fetchBackendLogs(full = false, since = 0) {
+    try {
+        const params = full ? "?full=true" : `?since=${since}`;
+        const res = await backendFetch(`/api/ops/backend-logs${params}`, { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed");
+        return await res.json();
+    } catch {
+        return { lines: [], size: 0 };
+    }
+}
+
+export async function runScraper(topics: number) {
+    try {
+        const res = await backendFetch("/api/ops/scraper", {
+            method: "POST",
+            body: JSON.stringify({ topics }),
+        });
+        return await res.json();
+    } catch {
+        return { status: "error", detail: "Failed to connect to backend" };
+    }
+}
+
+export async function fetchIngestionStatus() {
+    try {
+        const res = await backendFetch("/api/ops/ingestion-status", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed");
+        return await res.json();
+    } catch {
+        return { needsIngestion: false, pendingItems: [] };
+    }
+}
+
+export async function runIngestion() {
+    try {
+        const res = await backendFetch("/api/ops/ingest", { method: "POST" });
+        return await res.json();
+    } catch {
+        return { status: "error" };
+    }
+}
+
+export async function runTests(mode: string) {
+    try {
+        const res = await backendFetch("/api/ops/tests", {
+            method: "POST",
+            body: JSON.stringify({ mode }),
+        });
+        return await res.json();
+    } catch (e: any) {
+        return { output: "ERROR: " + e.toString() };
+    }
+}
+
+export async function fetchSettings() {
+    try {
+        const res = await backendFetch("/api/ops/settings", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed");
+        return await res.json();
+    } catch {
+        return { settings: {} };
+    }
+}
+
+export async function saveSettings(settings: Record<string, string>) {
+    try {
+        const res = await backendFetch("/api/ops/settings", {
+            method: "POST",
+            body: JSON.stringify({ settings }),
+        });
+        return await res.json();
+    } catch {
+        return { status: "error" };
+    }
+}
+
+export async function fetchPrompts() {
+    try {
+        const res = await backendFetch("/api/ops/prompts", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed");
+        return await res.json();
+    } catch {
+        return { prompts: {} };
+    }
+}
+
+export async function savePrompts(prompts: Record<string, string>) {
+    try {
+        const res = await backendFetch("/api/ops/prompts", {
+            method: "POST",
+            body: JSON.stringify({ prompts }),
+        });
+        return await res.json();
+    } catch {
+        return { status: "error" };
+    }
+}
+
+export async function clearLogs() {
+    try {
+        const res = await backendFetch("/api/ops/logs", { method: "DELETE" });
+        return await res.json();
+    } catch {
+        return { status: "error" };
     }
 }
