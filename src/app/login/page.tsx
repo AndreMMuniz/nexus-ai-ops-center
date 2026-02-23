@@ -59,7 +59,7 @@ export default function LoginPage() {
                                     style={{ background: 'rgba(0, 0, 0, 0.2)', border: '1px solid rgba(75, 85, 99, 0.4)' }}
                                     id="email"
                                     name="email"
-                                    placeholder="admin@nexus.local"
+                                    placeholder="your@email.com"
                                     type="email"
                                     required
                                 />
