@@ -55,7 +55,16 @@ export function LiveTerminalPanel({
                                             <span>Tokens: <span className="text-gray-300">{log.tokens.toLocaleString()}</span></span>
                                         )}
                                         {log.tools_names && log.tools_names.length > 0 && (
-                                            <span>Tools: <span className="text-gray-300">{log.tools_names.join(", ")}</span></span>
+                                            <span>
+                                                Tools: <span className="text-gray-300">
+                                                    {Object.entries(
+                                                        log.tools_names.reduce((acc: Record<string, number>, curr: string) => {
+                                                            acc[curr] = (acc[curr] || 0) + 1;
+                                                            return acc;
+                                                        }, {})
+                                                    ).map(([name, count]: [string, any]) => count > 1 ? `${name} [${count}]` : name).join(", ")}
+                                                </span>
+                                            </span>
                                         )}
                                         {log.doc_consulted && (
                                             <span>Doc: <span className="text-indigo-300">{log.doc_consulted}</span></span>
