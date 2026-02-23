@@ -116,7 +116,7 @@ export default function DashboardPage() {
 
                 {/* Service Controls Column */}
                 <div className="lg:col-span-1">
-                    <ServiceControls backendStatus={status.status} />
+                    <ServiceControls statusData={status} />
                 </div>
             </div>
 

@@ -36,7 +36,7 @@ export function LiveTerminalPanel({
                             logs.map((log, i) => (
                                 <div key={i} className="flex gap-2">
                                     <span className="text-gray-600 select-none">{(log.timestamp || "").substring(11, 19)}</span>
-                                    {log.status === "success" ? (
+                                    {log.status === "success" || log.status === 200 ? (
                                         <span className="text-[#00DC82]">200 OK</span>
                                     ) : (
                                         <span className="text-red-400">ERROR</span>

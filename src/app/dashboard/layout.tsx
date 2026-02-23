@@ -7,7 +7,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { fetchOpsStatus } from "./actions";
 
 const navItems = [
     { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -31,6 +33,18 @@ export default function DashboardLayout({
     children: React.ReactNode;
 }) {
     const pathname = usePathname();
+    const [systemStatus, setSystemStatus] = useState<any>({ status: "loading" });
+
+    useEffect(() => {
+        let isMounted = true;
+        const checkStatus = async () => {
+            const s = await fetchOpsStatus();
+            if (isMounted) setSystemStatus(s);
+        };
+        checkStatus();
+        const int = setInterval(checkStatus, 10000);
+        return () => { isMounted = false; clearInterval(int); };
+    }, []);
 
     interface NavItemProps {
         href: string;
@@ -101,15 +115,15 @@ export default function DashboardLayout({
                         <div className="flex items-center justify-between mb-2">
                             <span className="text-xs font-semibold text-gray-500">API Status</span>
                             <div className="flex items-center gap-1.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>
-                                <span className="text-[10px] text-gray-400">High Load</span>
+                                <span className={`w-1.5 h-1.5 rounded-full ${systemStatus?.status === 'online' ? 'bg-[#00DC82] shadow-[0_0_8px_rgba(0,220,130,0.6)]' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]'}`}></span>
+                                <span className="text-[10px] text-gray-400 capitalize">{systemStatus?.status || "Unknown"}</span>
                             </div>
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="text-xs font-semibold text-gray-500">Nexus Node</span>
                             <div className="flex items-center gap-1.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#00DC82] shadow-[0_0_8px_rgba(0,220,130,0.6)]"></span>
-                                <span className="text-[10px] text-[#00DC82]">Active</span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6] shadow-[0_0_8px_rgba(59,130,246,0.6)]"></span>
+                                <span className="text-[10px] text-[#3B82F6]">Vercel Edge</span>
                             </div>
                         </div>
                     </div>

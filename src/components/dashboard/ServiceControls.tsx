@@ -1,11 +1,13 @@
 import { Play, MoreHorizontal, Database, CloudOff, Cloud } from "lucide-react";
 
 export function ServiceControls({
-    backendStatus = "offline"
+    statusData = {}
 }: {
-    backendStatus: string
+    statusData: any
 }) {
-    const isOnline = backendStatus === "online";
+    const isOnline = statusData?.status === "online";
+    const debugUrl = statusData?.debug_url || "Unknown";
+    const errorMsg = statusData?.error || null;
 
     return (
         <div className="flex flex-col gap-6">
@@ -56,12 +58,17 @@ export function ServiceControls({
                                 <span className="font-medium text-sm text-gray-200">FastAPI Backend</span>
                             </div>
                         </div>
-                        <div className="flex items-center justify-between text-xs text-gray-500 relative z-10">
-                            <span>Status: {isOnline ? 'Running' : 'Stopped'}</span>
+                        <div className="flex items-center justify-between text-[10px] text-gray-500 relative z-10 mb-1">
+                            <span className="truncate max-w-[120px]" title={debugUrl}>{debugUrl}</span>
                             <span className={`flex items-center gap-1 ${isOnline ? 'text-[#00DC82]' : 'text-gray-500'}`}>
                                 <span className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-[#00DC82]' : 'bg-gray-500'}`}></span> {isOnline ? 'Online' : 'Offline'}
                             </span>
                         </div>
+                        {!isOnline && errorMsg && (
+                            <div className="text-[10px] text-red-400 relative z-10 truncate mt-1" title={errorMsg}>
+                                {errorMsg}
+                            </div>
+                        )}
                         {isOnline && (
                             <div className="absolute bottom-0 right-0 left-0 h-8 opacity-10">
                                 <svg className="w-full h-full text-[#00DC82] fill-current" preserveAspectRatio="none" viewBox="0 0 100 20">

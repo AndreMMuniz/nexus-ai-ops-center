@@ -17,10 +17,11 @@ async function backendFetch(path: string, options?: RequestInit) {
 export async function fetchOpsStatus() {
     try {
         const res = await backendFetch("/api/ops/status", { next: { revalidate: 10 } } as RequestInit & { next?: any });
-        if (!res.ok) throw new Error("Failed");
-        return await res.json();
-    } catch {
-        return { status: "offline", agent_initialized: false };
+        if (!res.ok) throw new Error("API returned " + res.status);
+        const data = await res.json();
+        return { ...data, debug_url: BACKEND_URL };
+    } catch (e: any) {
+        return { status: "offline", agent_initialized: false, debug_url: BACKEND_URL, error: e.message || "Unknown error" };
     }
 }
 
