@@ -83,7 +83,7 @@ export function RAGStats() {
                             <Tooltip
                                 contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', color: '#F3F4F6' }}
                                 itemStyle={{ color: '#F3F4F6' }}
-                                formatter={(value: number) => [`${value.toLocaleString()} chunks`, 'Records']}
+                                formatter={(value: any) => [`${Number(value).toLocaleString()} chunks`, 'Records']}
                             />
                             <Legend
                                 verticalAlign="bottom"
