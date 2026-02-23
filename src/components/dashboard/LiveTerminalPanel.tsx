@@ -34,15 +34,36 @@ export function LiveTerminalPanel({
                             <div className="text-gray-500 italic mb-4">{"// Awaiting incoming API connections..."}</div>
                         ) : (
                             logs.map((log, i) => (
-                                <div key={i} className="flex gap-2">
-                                    <span className="text-gray-600 select-none">{(log.timestamp || "").substring(11, 19)}</span>
-                                    {log.status === "success" || log.status === 200 ? (
-                                        <span className="text-[#00DC82]">200 OK</span>
-                                    ) : (
-                                        <span className="text-red-400">ERROR</span>
-                                    )}
-                                    <span className="text-purple-400">POST {log.query || "?"}</span>
-                                    <span className="text-gray-500">- Tools: {log.tools_used ?? 0} - User: <span className="text-blue-400">{log.user || "anon"}</span></span>
+                                <div key={i} className="flex flex-col gap-1 border-b border-gray-800/50 pb-2 mb-2">
+                                    <div className="flex gap-2 items-center flex-wrap">
+                                        <span className="text-gray-600 select-none">{(log.timestamp || "").substring(11, 19)}</span>
+                                        {log.status === "success" || log.status === 200 ? (
+                                            <span className="text-[#00DC82]">200 OK</span>
+                                        ) : (
+                                            <span className="text-red-400">ERROR</span>
+                                        )}
+                                        <span className="text-purple-400">POST {log.query || "?"}</span>
+                                        <span className="text-blue-400 select-none">[{log.user || "anon"}]</span>
+
+                                        {log.latency && (
+                                            <span className="text-yellow-500 ml-auto">{log.latency.toFixed(2)}s</span>
+                                        )}
+                                    </div>
+
+                                    <div className="flex gap-4 pl-[72px] text-xs text-gray-500 flex-wrap">
+                                        {log.tokens !== undefined && (
+                                            <span>Tokens: <span className="text-gray-300">{log.tokens.toLocaleString()}</span></span>
+                                        )}
+                                        {log.tools_names && log.tools_names.length > 0 && (
+                                            <span>Tools: <span className="text-gray-300">{log.tools_names.join(", ")}</span></span>
+                                        )}
+                                        {log.doc_consulted && (
+                                            <span>Doc: <span className="text-indigo-300">{log.doc_consulted}</span></span>
+                                        )}
+                                        {log.llm_grade !== undefined && (
+                                            <span>Grade: <span className={log.llm_grade >= 8 ? "text-green-400" : log.llm_grade >= 6 ? "text-yellow-400" : "text-red-400"}>{log.llm_grade}/10</span></span>
+                                        )}
+                                    </div>
                                 </div>
                             ))
                         )}
