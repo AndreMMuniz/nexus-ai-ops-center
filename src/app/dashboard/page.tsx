@@ -98,7 +98,7 @@ export default function DashboardPage() {
     return (
         <div className="max-w-[1600px] mx-auto w-full">
             <MetricsOverview
-                agentsCount={metrics.total_agents}
+                totalRequests={apiLogs.length}
                 apiLatency={stats.latency}
                 successRate={stats.successRate}
                 tokensUsage={metrics.tokens_usage}

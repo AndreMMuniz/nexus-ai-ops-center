@@ -1,12 +1,12 @@
 import { Bot, Zap, CheckCircle, Database } from "lucide-react";
 
 export function MetricsOverview({
-    agentsCount = 0,
+    totalRequests = 0,
     apiLatency = 0,
     successRate = 0,
     tokensUsage = "0"
 }: {
-    agentsCount?: number;
+    totalRequests?: number;
     apiLatency?: number;
     successRate?: number;
     tokensUsage?: string;
@@ -21,16 +21,16 @@ export function MetricsOverview({
             <div className="bg-[#111827] border border-[#1F2937] rounded-xl p-4 shadow-sm hover:border-[#00DC82]/30 transition-colors group">
                 <div className="flex items-start justify-between">
                     <div>
-                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Total Agents</p>
-                        <h3 className="text-2xl font-bold text-white group-hover:text-[#00DC82] transition-colors">{agentsCount}</h3>
+                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Total Requests (24h)</p>
+                        <h3 className="text-2xl font-bold text-white group-hover:text-[#00DC82] transition-colors">{totalRequests.toLocaleString()}</h3>
                     </div>
                     <div className="p-2 bg-[#00DC82]/10 rounded-lg text-[#00DC82]">
-                        <Bot className="w-5 h-5" />
+                        <ActivityIcon className="w-5 h-5" />
                     </div>
                 </div>
                 <div className="mt-3 flex items-center text-xs text-[#00DC82] font-medium">
-                    <ActivityIcon className="w-3 h-3 mr-1" />
-                    Active instances
+                    <span className="w-3 h-3 mr-1 flex items-center justify-center">↑</span>
+                    API Traffic
                 </div>
             </div>
 
