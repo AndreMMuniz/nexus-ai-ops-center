@@ -32,9 +32,16 @@ export default function DashboardLayout({
 }) {
     const pathname = usePathname();
 
-    const NavItem = ({ href, icon: IconComponent, Icon: AltIcon, label }: any) => {
+    interface NavItemProps {
+        href: string;
+        icon?: React.ElementType;
+        Icon?: React.ElementType;
+        label: string;
+    }
+
+    const NavItem = ({ href, icon: IconComponent, Icon: AltIcon, label }: NavItemProps) => {
         const isActive = pathname === href;
-        const FinalIcon = IconComponent || AltIcon;
+        const FinalIcon = (IconComponent || AltIcon) as React.ElementType;
         return (
             <Link
                 href={href}
@@ -46,7 +53,7 @@ export default function DashboardLayout({
                 )}
                 style={isActive ? { background: "linear-gradient(90deg, rgba(0, 220, 130, 0.1) 0%, rgba(0, 220, 130, 0) 100%)" } : {}}
             >
-                <FinalIcon className={cn("w-5 h-5 transition-colors", isActive ? "" : "group-hover:text-[#00DC82]")} />
+                {FinalIcon && <FinalIcon className={cn("w-5 h-5 transition-colors", isActive ? "" : "group-hover:text-[#00DC82]")} />}
                 {label}
             </Link>
         );

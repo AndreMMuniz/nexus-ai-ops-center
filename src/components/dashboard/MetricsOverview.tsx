@@ -1,13 +1,28 @@
 import { Bot, Zap, CheckCircle, Database } from "lucide-react";
 
-export function MetricsOverview() {
+export function MetricsOverview({
+    agentsCount = 0,
+    apiLatency = 0,
+    successRate = 0,
+    tokensUsage = "0"
+}: {
+    agentsCount?: number;
+    apiLatency?: number;
+    successRate?: number;
+    tokensUsage?: string;
+}) {
+    // Basic formatting helpers
+    const formattedLatency = Math.round(apiLatency * 1000); // Usually these logs come in seconds, converting to ms
+    const latencyStatus = formattedLatency < 100 ? "Optimal Performance" : (formattedLatency < 500 ? "Acceptable Latency" : "High Latency");
+    const successStatus = successRate > 95 ? "Stable" : (successRate > 80 ? "Degraded" : "Critical");
+
     return (
         <section className="mb-8 grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="bg-[#111827] border border-[#1F2937] rounded-xl p-4 shadow-sm hover:border-[#00DC82]/30 transition-colors group">
                 <div className="flex items-start justify-between">
                     <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Total Agents</p>
-                        <h3 className="text-2xl font-bold text-white group-hover:text-[#00DC82] transition-colors">124</h3>
+                        <h3 className="text-2xl font-bold text-white group-hover:text-[#00DC82] transition-colors">{agentsCount}</h3>
                     </div>
                     <div className="p-2 bg-[#00DC82]/10 rounded-lg text-[#00DC82]">
                         <Bot className="w-5 h-5" />
@@ -15,7 +30,7 @@ export function MetricsOverview() {
                 </div>
                 <div className="mt-3 flex items-center text-xs text-[#00DC82] font-medium">
                     <ActivityIcon className="w-3 h-3 mr-1" />
-                    +12% vs last week
+                    Active instances
                 </div>
             </div>
 
@@ -23,7 +38,7 @@ export function MetricsOverview() {
                 <div className="flex items-start justify-between">
                     <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">API Latency</p>
-                        <h3 className="text-2xl font-bold text-white group-hover:text-[#3B82F6] transition-colors">45ms</h3>
+                        <h3 className="text-2xl font-bold text-white group-hover:text-[#3B82F6] transition-colors">{formattedLatency}ms</h3>
                     </div>
                     <div className="p-2 bg-[#3B82F6]/10 rounded-lg text-[#3B82F6]">
                         <Zap className="w-5 h-5" />
@@ -31,7 +46,7 @@ export function MetricsOverview() {
                 </div>
                 <div className="mt-3 flex items-center text-xs text-[#3B82F6] font-medium">
                     <CheckCircle className="w-3 h-3 mr-1" />
-                    Optimal Performance
+                    {latencyStatus}
                 </div>
             </div>
 
@@ -39,7 +54,7 @@ export function MetricsOverview() {
                 <div className="flex items-start justify-between">
                     <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Success Rate</p>
-                        <h3 className="text-2xl font-bold text-white group-hover:text-purple-400 transition-colors">99.8%</h3>
+                        <h3 className="text-2xl font-bold text-white group-hover:text-purple-400 transition-colors">{successRate.toFixed(1)}%</h3>
                     </div>
                     <div className="p-2 bg-purple-500/10 rounded-lg text-purple-400">
                         <CheckCircle className="w-5 h-5" />
@@ -47,7 +62,7 @@ export function MetricsOverview() {
                 </div>
                 <div className="mt-3 flex items-center text-xs text-gray-400 font-medium">
                     <span className="w-3 h-3 mr-1 flex items-center justify-center">-</span>
-                    Stable
+                    {successStatus}
                 </div>
             </div>
 
@@ -55,7 +70,7 @@ export function MetricsOverview() {
                 <div className="flex items-start justify-between">
                     <div>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Tokens Usage</p>
-                        <h3 className="text-2xl font-bold text-white group-hover:text-orange-400 transition-colors">2.4M</h3>
+                        <h3 className="text-2xl font-bold text-white group-hover:text-orange-400 transition-colors">{tokensUsage}</h3>
                     </div>
                     <div className="p-2 bg-orange-500/10 rounded-lg text-orange-400">
                         <Database className="w-5 h-5" />
@@ -63,7 +78,7 @@ export function MetricsOverview() {
                 </div>
                 <div className="mt-3 flex items-center text-xs text-orange-400 font-medium">
                     <AlertTriangleIcon className="w-3 h-3 mr-1" />
-                    Near Limit (85%)
+                    Active billing cycle
                 </div>
             </div>
         </section>

@@ -16,11 +16,27 @@ async function backendFetch(path: string, options?: RequestInit) {
 
 export async function fetchOpsStatus() {
     try {
-        const res = await backendFetch("/api/ops/status", { next: { revalidate: 10 } } as any);
+        const res = await backendFetch("/api/ops/status", { next: { revalidate: 10 } } as RequestInit & { next?: any });
         if (!res.ok) throw new Error("Failed");
         return await res.json();
     } catch {
         return { status: "offline", agent_initialized: false };
+    }
+}
+
+export async function fetchOpsMetrics() {
+    try {
+        const res = await backendFetch("/api/ops/metrics", { next: { revalidate: 10 } } as RequestInit & { next?: any });
+        if (!res.ok) throw new Error("Failed");
+        return await res.json();
+    } catch {
+        return {
+            total_agents: 0,
+            tokens_usage: "0",
+            cpu_usage: 0,
+            memory_usage: 0,
+            storage_usage: 0
+        };
     }
 }
 
