@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { fetchOpsLogs, fetchOpsStatus, fetchOpsMetrics, clearLogs } from "./actions";
+import { fetchOpsLogs, fetchOpsStatus, fetchOpsMetrics, clearLogs, getTokenUsage } from "./actions";
 
 // Components
 import { MetricsOverview } from "@/components/dashboard/MetricsOverview";
@@ -30,17 +30,20 @@ export default function DashboardPage() {
         memory_usage: 0,
         storage_usage: 0
     });
+    const [tokenStats, setTokenStats] = useState({ total_tokens: 0 });
 
     useEffect(() => {
         const fetchAll = async () => {
-            const [s, l, m] = await Promise.all([
+            const [s, l, m, t] = await Promise.all([
                 fetchOpsStatus(),
                 fetchOpsLogs(),
-                fetchOpsMetrics()
+                fetchOpsMetrics(),
+                getTokenUsage()
             ]);
             setStatus(s);
             setApiLogs(l);
             setMetrics(m);
+            setTokenStats(t);
         };
         fetchAll();
         const interval = setInterval(fetchAll, 3000); // Polling every 3 seconds
@@ -58,21 +61,18 @@ export default function DashboardPage() {
             return {
                 latency: 0,
                 successRate: 100,
-                topEndpoints: [],
-                tokensUsage: "0"
+                topEndpoints: []
             };
         }
 
         // Latency & Success
         let totalLatency = 0;
         let successCount = 0;
-        let totalTokens = 0;
         const endpointCounts: Record<string, number> = {};
 
         apiLogs.forEach(log => {
             if (log.latency) totalLatency += Number(log.latency);
             if (log.status === "success" || log.status === 200) successCount++;
-            if (log.tokens) totalTokens += Number(log.tokens);
 
             // Extract a pseudo-endpoint or route from exactly what was queried
             let route = log.query || "/v1/chat";
@@ -89,25 +89,25 @@ export default function DashboardPage() {
             .sort((a, b) => b.count - a.count)
             .slice(0, 5); // Take top 5
 
-        // Format Tokens Usage (e.g., 12500 -> 12.5k)
-        let formattedTokens = "0";
-        if (totalTokens >= 1000000) {
-            formattedTokens = (totalTokens / 1000000).toFixed(1) + "M";
-        } else if (totalTokens >= 1000) {
-            formattedTokens = (totalTokens / 1000).toFixed(1) + "k";
-        } else {
-            formattedTokens = totalTokens.toString();
-        }
-
         return {
             latency: avgLatency,
             successRate,
-            topEndpoints,
-            tokensUsage: formattedTokens
+            topEndpoints
         };
     };
 
     const stats = calculateStats();
+
+    // Format Tokens Usage (e.g., 12500 -> 12.5k)
+    let formattedTokens = "0";
+    const totalTokens = tokenStats?.total_tokens || 0;
+    if (totalTokens >= 1000000) {
+        formattedTokens = (totalTokens / 1000000).toFixed(1) + "M";
+    } else if (totalTokens >= 1000) {
+        formattedTokens = (totalTokens / 1000).toFixed(1) + "k";
+    } else {
+        formattedTokens = totalTokens.toString();
+    }
 
     return (
         <div className="max-w-[1600px] mx-auto w-full">
@@ -115,7 +115,7 @@ export default function DashboardPage() {
                 totalRequests={apiLogs.length}
                 apiLatency={stats.latency}
                 successRate={stats.successRate}
-                tokensUsage={stats.tokensUsage}
+                tokensUsage={formattedTokens}
             />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

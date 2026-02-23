@@ -52,6 +52,17 @@ export async function getSystemResources() {
     }
 }
 
+export async function getTokenUsage() {
+    try {
+        const res = await backendFetch("/api/ops/token-usage", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to fetch token usage");
+        return await res.json();
+    } catch (error) {
+        console.error("Token usage error:", error);
+        return { total_input: 0, total_output: 0, total_tokens: 0, conversations: [] };
+    }
+}
+
 export async function fetchOpsLogs() {
     try {
         const res = await backendFetch("/api/ops/logs", { cache: "no-store" });
