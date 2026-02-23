@@ -1,42 +1,44 @@
 import { signIn } from "@/auth";
-import { Lock, LogIn } from "lucide-react";
+import { Mail, Lock, LogIn, Fingerprint, Building2, ShieldCheck, Activity } from "lucide-react";
 
 export default function LoginPage() {
     return (
-        <div className="relative flex h-screen w-full items-center justify-center overflow-hidden" style={{ background: "linear-gradient(145deg, #0a1628 0%, #0d1117 40%, #0f1923 100%)" }}>
-            {/* Subtle radial glow */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-gradient-to-b from-emerald-600/5 via-transparent to-transparent rounded-full blur-3xl pointer-events-none" />
+        <div className="bg-[#0B0F19] font-sans antialiased h-screen overflow-hidden flex items-center justify-center relative selection:bg-[#00DC82] selection:text-black">
 
-            {/* Subtle grid */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.015)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
+            {/* Background elements */}
+            <div className="absolute inset-0 z-0 bg-[#050B14]">
+                <div className="absolute top-[-10%] left-[-10%] w-[800px] h-[800px] bg-[#3B82F6]/10 rounded-full blur-[120px]"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[800px] h-[800px] bg-[#00DC82]/5 rounded-full blur-[120px]"></div>
+                <div className="absolute top-[40%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-900/10 rounded-full blur-[100px]"></div>
 
-            <div className="z-10 w-full max-w-[440px] px-6">
-                {/* Logo */}
-                <div className="flex flex-col items-center mb-8">
-                    <div className="relative mb-5">
-                        <div className="absolute inset-0 rounded-2xl bg-emerald-500/15 blur-xl scale-150" />
-                        <div className="relative h-16 w-16 rounded-2xl border border-emerald-500/30 flex items-center justify-center" style={{ background: "linear-gradient(135deg, #0f1f2e 0%, #0a1628 100%)" }}>
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                                <path d="M8 16C8 11.582 11.582 8 16 8C20.418 8 24 11.582 24 16C24 20.418 20.418 24 16 24" stroke="url(#grad)" strokeWidth="2.5" strokeLinecap="round" />
-                                <path d="M24 16C24 20.418 20.418 24 16 24C11.582 24 8 20.418 8 16C8 11.582 11.582 8 16 8" stroke="url(#grad)" strokeWidth="2.5" strokeLinecap="round" transform="translate(0, 0)" />
-                                <defs>
-                                    <linearGradient id="grad" x1="8" y1="8" x2="24" y2="24">
-                                        <stop offset="0%" stopColor="#10b981" />
-                                        <stop offset="100%" stopColor="#06b6d4" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
+                {/* Cyber Grid Pattern */}
+                <div
+                    className="absolute inset-0 opacity-[0.07]"
+                    style={{
+                        backgroundImage: `linear-gradient(to right, #1f2937 1px, transparent 1px), linear-gradient(to bottom, #1f2937 1px, transparent 1px)`,
+                        backgroundSize: '40px 40px',
+                        maskImage: 'linear-gradient(to bottom, transparent, 10%, white, 90%, transparent)',
+                        WebkitMaskImage: 'linear-gradient(to bottom, transparent, 10%, white, 90%, transparent)'
+                    }}
+                />
+            </div>
+
+            <main className="w-full max-w-md mx-4 relative z-10">
+                <div className="flex flex-col items-center justify-center mb-8">
+                    <div className="w-16 h-16 rounded-2xl p-[1px] mb-4" style={{ background: 'linear-gradient(to bottom right, #00DC82, #3B82F6)', boxShadow: '0 0 25px -5px rgba(59, 130, 246, 0.4)' }}>
+                        <div className="w-full h-full rounded-2xl bg-[#0B0F19] flex items-center justify-center relative overflow-hidden">
+                            <div className="absolute inset-0 blur-sm" style={{ background: 'linear-gradient(to bottom right, rgba(0, 220, 130, 0.2), rgba(59, 130, 246, 0.2))' }}></div>
+                            <Activity className="text-[#00DC82] relative z-10" size={32} />
                         </div>
                     </div>
-                    <h1 className="text-[26px] font-bold text-white tracking-tight">Nexus AI</h1>
-                    <p className="text-[11px] text-gray-500 uppercase tracking-[0.35em] font-medium mt-1">Ops Center Access</p>
+                    <h1 className="text-3xl font-bold text-white tracking-tight">Nexus AI</h1>
+                    <p className="text-sm text-gray-400 font-mono mt-1 tracking-wider uppercase">Ops Center Access</p>
                 </div>
 
-                {/* Card — dashed border style */}
-                <div className="relative rounded-2xl border border-dashed border-gray-700/60 p-8" style={{ background: "rgba(13, 17, 23, 0.6)", backdropFilter: "blur(12px)" }}>
+                <div className="rounded-2xl p-8" style={{ background: 'rgba(13, 18, 30, 0.65)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}>
                     <div className="mb-6">
-                        <h3 className="text-xl font-bold text-white">Welcome Back</h3>
-                        <p className="text-[13px] text-gray-500 mt-1">Authenticate to access deep agent controls.</p>
+                        <h2 className="text-xl font-semibold text-white mb-1">Welcome Back</h2>
+                        <p className="text-sm text-gray-400">Authenticate to access deep agent controls.</p>
                     </div>
 
                     <form
@@ -44,53 +46,102 @@ export default function LoginPage() {
                             "use server";
                             await signIn("credentials", formData);
                         }}
-                        className="flex flex-col space-y-5"
+                        className="space-y-5"
                     >
-                        {/* Password Field */}
-                        <div>
-                            <label htmlFor="password" className="block text-[11px] text-gray-400 uppercase tracking-[0.15em] font-semibold mb-2">
-                                Password
-                            </label>
+                        <div className="group">
+                            <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wide transition-colors group-focus-within:text-[#3B82F6]" htmlFor="email">Email Address</label>
                             <div className="relative">
-                                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500">
-                                    <Lock size={16} />
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Mail className="text-gray-500 w-5 h-5 transition-colors group-focus-within:text-[#3B82F6]" />
                                 </div>
                                 <input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    placeholder="••••••••••••"
-                                    autoComplete="current-password"
+                                    className="block w-full pl-10 pr-3 py-2.5 rounded-lg text-gray-200 placeholder-gray-600 sm:text-sm focus:outline-none focus:ring-1 focus:ring-[#3B82F6]/50 transition-all duration-300"
+                                    style={{ background: 'rgba(0, 0, 0, 0.2)', border: '1px solid rgba(75, 85, 99, 0.4)' }}
+                                    id="email"
+                                    name="email"
+                                    placeholder="admin@nexus.local"
+                                    type="email"
                                     required
-                                    className="block w-full rounded-xl border border-gray-700/70 bg-[#0a1628]/80 pl-11 pr-4 py-3.5 text-[14px] text-gray-200 placeholder-gray-600 focus:border-emerald-500/50 focus:outline-none focus:ring-1 focus:ring-emerald-500/20 transition-all duration-300"
                                 />
                             </div>
                         </div>
 
-                        {/* Sign In Button */}
-                        <button
-                            type="submit"
-                            className="relative flex h-[50px] w-full items-center justify-center gap-2 rounded-xl text-[14px] font-semibold text-white transition-all duration-300 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)] active:scale-[0.98]"
-                            style={{ background: "linear-gradient(135deg, #10b981 0%, #0891b2 100%)" }}
-                        >
-                            <LogIn size={18} />
-                            Sign In
-                        </button>
+                        <div className="group">
+                            <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wide transition-colors group-focus-within:text-[#3B82F6]" htmlFor="password">Password</label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Lock className="text-gray-500 w-5 h-5 transition-colors group-focus-within:text-[#3B82F6]" />
+                                </div>
+                                <input
+                                    className="block w-full pl-10 pr-3 py-2.5 rounded-lg text-gray-200 placeholder-gray-600 sm:text-sm focus:outline-none focus:ring-1 focus:ring-[#3B82F6]/50 transition-all duration-300"
+                                    style={{ background: 'rgba(0, 0, 0, 0.2)', border: '1px solid rgba(75, 85, 99, 0.4)' }}
+                                    id="password"
+                                    name="password"
+                                    placeholder="••••••••••••"
+                                    type="password"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                                <input className="h-4 w-4 rounded border-gray-600 bg-black/40 text-[#00DC82] focus:ring-[#00DC82]/50 focus:ring-offset-0 focus:ring-offset-transparent outline-none" id="remember-me" name="remember-me" type="checkbox" />
+                                <label className="ml-2 block text-xs text-gray-400" htmlFor="remember-me">Remember device</label>
+                            </div>
+                            <div className="text-xs">
+                                <a className="font-medium text-[#3B82F6] hover:text-[#3B82F6]/80 hover:underline transition-colors" href="#">Forgot password?</a>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button
+                                className="group relative w-full flex justify-center py-2.5 px-4 text-sm font-semibold rounded-lg text-white transition-all shadow-lg hover:shadow-blue-500/25 active:scale-[0.98]"
+                                style={{ background: 'linear-gradient(to right, #059669, #2563eb)' }}
+                                type="submit"
+                            >
+                                <span className="absolute left-0 inset-y-0 flex items-center pl-3">
+                                    <LogIn className="text-white/50 group-hover:text-white transition-colors w-5 h-5" />
+                                </span>
+                                Sign In
+                                <div className="absolute inset-0 rounded-lg ring-1 ring-inset ring-white/20 group-hover:ring-white/30"></div>
+                            </button>
+                        </div>
                     </form>
+
+                    <div className="mt-6">
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-gray-700/50"></div>
+                            </div>
+                            <div className="relative flex justify-center text-xs">
+                                <span className="px-2 bg-[#121826] text-gray-500 rounded text-[10px] uppercase tracking-wider">Or continue with</span>
+                            </div>
+                        </div>
+                        <div className="mt-6 grid grid-cols-2 gap-3">
+                            <button className="flex items-center justify-center w-full px-4 py-2 border border-gray-700 rounded-lg shadow-sm bg-black/20 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white hover:border-gray-500 transition-all group" type="button">
+                                <Building2 className="w-5 h-5 mr-2 text-gray-500 group-hover:text-white" />
+                                <span className="text-xs">SSO Login</span>
+                            </button>
+                            <button className="flex items-center justify-center w-full px-4 py-2 border border-gray-700 rounded-lg shadow-sm bg-black/20 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white hover:border-gray-500 transition-all group" type="button">
+                                <Fingerprint className="w-5 h-5 mr-2 text-gray-500 group-hover:text-white" />
+                                <span className="text-xs">Passkey</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Footer */}
-                <div className="flex flex-col items-center gap-2 mt-8">
-                    <div className="flex items-center gap-2">
-                        <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-50" />
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                        </span>
-                        <span className="text-[11px] text-gray-600 font-mono tracking-wide">System Status: Operational</span>
-                    </div>
-                    <p className="text-[10px] text-gray-700 tracking-wide">Protected by Nexus Shield v2.4.0</p>
+                <div className="mt-8 text-center space-y-2">
+                    <p className="text-[10px] text-gray-600 font-mono">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500/50 inline-block mr-1"></span>
+                        System Status: Operational
+                    </p>
+                    <p className="text-[10px] text-gray-700 flex items-center justify-center gap-1">
+                        <ShieldCheck className="w-3 h-3" />
+                        Protected by Nexus Shield v2.4.0
+                    </p>
                 </div>
-            </div>
+            </main>
         </div>
     );
 }
