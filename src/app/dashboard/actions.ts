@@ -141,3 +141,49 @@ export async function clearLogs() {
         return { status: "error" };
     }
 }
+
+export async function getTerminalOutput() {
+    try {
+        const res = await backendFetch("/api/ops/terminal", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed");
+        return await res.json();
+    } catch {
+        return { running: false, output: [] };
+    }
+}
+
+export async function startTerminal() {
+    try {
+        const res = await backendFetch("/api/ops/terminal", {
+            method: "POST",
+            body: JSON.stringify({ action: "start" }),
+        });
+        return await res.json();
+    } catch {
+        return { status: "error" };
+    }
+}
+
+export async function stopTerminal() {
+    try {
+        const res = await backendFetch("/api/ops/terminal", {
+            method: "POST",
+            body: JSON.stringify({ action: "stop" }),
+        });
+        return await res.json();
+    } catch {
+        return { status: "error" };
+    }
+}
+
+export async function sendTerminalInput(input: string) {
+    try {
+        const res = await backendFetch("/api/ops/terminal", {
+            method: "POST",
+            body: JSON.stringify({ action: "input", input }),
+        });
+        return await res.json();
+    } catch {
+        return { status: "error" };
+    }
+}
