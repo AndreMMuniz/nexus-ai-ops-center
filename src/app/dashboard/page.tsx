@@ -55,6 +55,7 @@ export default function DashboardPage() {
     const handleClearLogs = async () => {
         await clearLogs();
         setApiLogs([]);
+        setTokenStats({ total_tokens: 0 });
     };
 
     // Calculate dynamic data based on logs
