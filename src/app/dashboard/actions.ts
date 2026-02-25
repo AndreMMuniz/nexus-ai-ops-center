@@ -16,7 +16,7 @@ async function backendFetch(path: string, options?: RequestInit) {
 
 export async function fetchOpsStatus() {
     try {
-        const res = await backendFetch("/api/ops/status", { next: { revalidate: 10 } } as RequestInit & { next?: any });
+        const res = await backendFetch("/api/ops/status", { cache: "no-store" });
         if (!res.ok) throw new Error("API returned " + res.status);
         const data = await res.json();
         return { ...data, debug_url: BACKEND_URL };
@@ -27,7 +27,7 @@ export async function fetchOpsStatus() {
 
 export async function fetchOpsMetrics() {
     try {
-        const res = await backendFetch("/api/ops/metrics", { next: { revalidate: 10 } } as RequestInit & { next?: any });
+        const res = await backendFetch("/api/ops/metrics", { cache: "no-store" });
         if (!res.ok) throw new Error("Failed");
         return await res.json();
     } catch {
