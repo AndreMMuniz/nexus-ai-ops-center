@@ -18,6 +18,7 @@ export function NexusLogo({ size = 32, className = "" }: NexusLogoProps) {
             width={size}
             height={size}
             className={className}
+            unoptimized
             priority
         />
     );
