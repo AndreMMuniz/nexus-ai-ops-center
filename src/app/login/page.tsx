@@ -1,15 +1,44 @@
 "use client";
 
-import { useActionState } from 'react';
+import { useState } from 'react';
 import { Mail, Lock, LogIn, Fingerprint, Building2, ShieldCheck } from "lucide-react";
 import { NexusLogo } from "@/components/NexusLogo";
-import { authenticate } from "./actions";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-    const [errorMessage, formAction, isPending] = useActionState(
-        authenticate,
-        undefined
-    );
+    const [errorMessage, setErrorMessage] = useState("");
+    const [isPending, setIsPending] = useState(false);
+    const router = useRouter();
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsPending(true);
+        setErrorMessage("");
+
+        const formData = new FormData(e.currentTarget);
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+
+        try {
+            const result = await signIn("credentials", {
+                email,
+                password,
+                redirect: false,
+            });
+
+            if (result?.error) {
+                setErrorMessage("Invalid credentials.");
+            } else if (result?.ok) {
+                router.push("/dashboard");
+                router.refresh();
+            }
+        } catch (error) {
+            setErrorMessage("Something went wrong.");
+        } finally {
+            setIsPending(false);
+        }
+    };
 
     return (
         <div className="bg-[#0B0F19] font-sans antialiased h-screen overflow-hidden flex items-center justify-center relative selection:bg-[#00DC82] selection:text-black">
@@ -48,7 +77,7 @@ export default function LoginPage() {
                     </div>
 
                     <form
-                        action={formAction}
+                        onSubmit={handleSubmit}
                         className="space-y-5"
                     >
                         <div className="group">
