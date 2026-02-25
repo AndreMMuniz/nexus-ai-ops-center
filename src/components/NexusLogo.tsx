@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 interface NexusLogoProps {
     /** Width in pixels (height auto-scales to keep aspect ratio) */
     size?: number;
@@ -12,14 +10,13 @@ interface NexusLogoProps {
  */
 export function NexusLogo({ size = 32, className = "" }: NexusLogoProps) {
     return (
-        <Image
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
             src="/nexus-logo.svg"
             alt="Nexus AI"
             width={size}
             height={size}
             className={className}
-            unoptimized
-            priority
         />
     );
 }
