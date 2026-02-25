@@ -42,7 +42,19 @@ export default function LoginPage() {
                     <form
                         action={async (formData) => {
                             "use server";
-                            await signIn("credentials", { ...Object.fromEntries(formData), redirectTo: "/dashboard" });
+                            try {
+                                await signIn("credentials", {
+                                    email: formData.get("email") as string,
+                                    password: formData.get("password") as string,
+                                    redirectTo: "/dashboard",
+                                });
+                            } catch (error: any) {
+                                // NextAuth v5 throws NEXT_REDIRECT — must re-throw it
+                                if (error?.digest?.startsWith("NEXT_REDIRECT")) {
+                                    throw error;
+                                }
+                                // Auth failed — stays on login page
+                            }
                         }}
                         className="space-y-5"
                     >
