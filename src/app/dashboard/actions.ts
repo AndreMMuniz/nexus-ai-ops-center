@@ -21,7 +21,7 @@ export async function fetchOpsStatus() {
         const data = await res.json();
         return { ...data, debug_url: BACKEND_URL };
     } catch (e: any) {
-        return { status: "offline", agent_initialized: false, debug_url: BACKEND_URL, error: e.message || "Unknown error" };
+        return { status: "offline", agent_initialized: false, db_status: "unknown", debug_url: BACKEND_URL, error: e.message || "Unknown error" };
     }
 }
 

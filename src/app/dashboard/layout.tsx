@@ -115,7 +115,7 @@ export default function DashboardLayout({
                         <div className="flex items-center justify-between mb-2">
                             <span className="text-xs font-semibold text-gray-500">API Status</span>
                             <div className="flex items-center gap-1.5">
-                                <span className={`w-1.5 h-1.5 rounded-full ${systemStatus?.status === 'online' ? 'bg-[#00DC82] shadow-[0_0_8px_rgba(0,220,130,0.6)]' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]'}`}></span>
+                                <span className={`w-1.5 h-1.5 rounded-full ${systemStatus?.status === 'online' ? 'bg-[#00DC82] shadow-[0_0_8px_rgba(0,220,130,0.6)]' : systemStatus?.status === 'degraded' ? 'bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.6)] animate-pulse' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]'}`}></span>
                                 <span className="text-[10px] text-gray-400 capitalize">{systemStatus?.status || "Unknown"}</span>
                             </div>
                         </div>
