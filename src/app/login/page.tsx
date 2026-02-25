@@ -1,5 +1,6 @@
 import { signIn } from "@/auth";
-import { Mail, Lock, LogIn, Fingerprint, Building2, ShieldCheck, Activity } from "lucide-react";
+import { Mail, Lock, LogIn, Fingerprint, Building2, ShieldCheck } from "lucide-react";
+import { NexusLogo } from "@/components/NexusLogo";
 
 export default function LoginPage() {
     return (
@@ -25,11 +26,8 @@ export default function LoginPage() {
 
             <main className="w-full max-w-md mx-4 relative z-10">
                 <div className="flex flex-col items-center justify-center mb-8">
-                    <div className="w-16 h-16 rounded-2xl p-[1px] mb-4" style={{ background: 'linear-gradient(to bottom right, #00DC82, #3B82F6)', boxShadow: '0 0 25px -5px rgba(59, 130, 246, 0.4)' }}>
-                        <div className="w-full h-full rounded-2xl bg-[#0B0F19] flex items-center justify-center relative overflow-hidden">
-                            <div className="absolute inset-0 blur-sm" style={{ background: 'linear-gradient(to bottom right, rgba(0, 220, 130, 0.2), rgba(59, 130, 246, 0.2))' }}></div>
-                            <Activity className="text-[#00DC82] relative z-10" size={32} />
-                        </div>
+                    <div className="mb-4" style={{ filter: 'drop-shadow(0 0 25px rgba(0, 220, 130, 0.3))' }}>
+                        <NexusLogo size={64} className="rounded-2xl" />
                     </div>
                     <h1 className="text-3xl font-bold text-white tracking-tight">Nexus AI</h1>
                     <p className="text-sm text-gray-400 font-mono mt-1 tracking-wider uppercase">Ops Center Access</p>

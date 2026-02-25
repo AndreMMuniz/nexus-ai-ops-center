@@ -9,6 +9,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { NexusLogo } from "@/components/NexusLogo";
 import { fetchOpsStatus } from "./actions";
 
 const navItems = [
@@ -83,9 +84,7 @@ export default function DashboardLayout({
             >
                 {/* Logo Area */}
                 <div className="p-6 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded bg-gradient-to-br from-[#00DC82] to-[#3B82F6] flex items-center justify-center shadow-[0_0_20px_-5px_rgba(0,220,130,0.3)]">
-                        <Activity className="text-white w-5 h-5" />
-                    </div>
+                    <NexusLogo size={32} className="rounded-lg shadow-[0_0_20px_-5px_rgba(0,220,130,0.3)]" />
                     <div>
                         <h1 className="font-bold text-lg tracking-tight text-white leading-none">Nexus AI</h1>
                         <p className="text-[10px] text-[#00DC82] font-semibold tracking-wider mt-0.5">OPS CENTER</p>
