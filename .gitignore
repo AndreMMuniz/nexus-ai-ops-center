@@ -42,3 +42,8 @@ next-env.d.ts
 
 # antigravity kit
 .agent
+
+# documentation
+ROADMAP_IMPROVEMENTS.md
+PRD_STATUS.md
+PRD.md

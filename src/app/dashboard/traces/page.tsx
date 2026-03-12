@@ -22,14 +22,30 @@ export default function TracesPage() {
 
     useEffect(() => {
         if (!connected) return;
-        const interval = setInterval(async () => {
-            const data = await fetchBackendLogs(false, fileSize);
-            if (data.lines && data.lines.length > 0) {
-                setLines((prev) => [...prev, ...data.lines].slice(-200));
+        let timeoutId: NodeJS.Timeout;
+        let isFetching = false;
+
+        const tick = async () => {
+            if (isFetching) return;
+            isFetching = true;
+            try {
+                const data = await fetchBackendLogs(false, fileSize);
+                if (data && data.lines && data.lines.length > 0) {
+                    setLines((prev) => [...prev, ...data.lines].slice(-400));
+                }
+                if (data && data.size !== undefined) {
+                    setFileSize(data.size);
+                }
+            } catch (e) {
+                console.error(e);
+            } finally {
+                isFetching = false;
+                timeoutId = setTimeout(tick, 2000);
             }
-            if (data.size) setFileSize(data.size);
-        }, 2000);
-        return () => clearInterval(interval);
+        };
+
+        timeoutId = setTimeout(tick, 2000);
+        return () => clearTimeout(timeoutId);
     }, [connected, fileSize]);
 
     useEffect(() => {
