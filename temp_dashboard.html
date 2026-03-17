@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nexus Ops Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#00DC82", // Neon Emerald
+              secondary: "#3B82F6", // Neon Blue
+              "background-light": "#f3f4f6",
+              "background-dark": "#0B0F19", // Deepest Charcoal/Navy
+              "surface-dark": "#111827",
+              "glass-dark": "rgba(17, 24, 39, 0.7)",
+              "border-dark": "#1F2937",
+              "accent-glow": "rgba(0, 220, 130, 0.15)",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"],
+            },
+            backgroundImage: {
+              'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+              'mesh': 'radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%)',
+            },
+            boxShadow: {
+              'glow': '0 0 20px -5px rgba(0, 220, 130, 0.3)',
+              'glow-blue': '0 0 20px -5px rgba(59, 130, 246, 0.3)',
+            }
+          },
+        },
+      };
+    </script>
+<style>.custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(31, 41, 55, 0.5); 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #374151; 
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #4B5563; 
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .nav-item-active {
+            background: linear-gradient(90deg, rgba(0, 220, 130, 0.1) 0%, rgba(0, 220, 130, 0) 100%);
+            border-left: 3px solid #00DC82;
+        }
+        .terminal-blink {
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-300 font-sans antialiased h-screen overflow-hidden flex selection:bg-primary selection:text-black">
+<aside class="w-64 h-full flex flex-col border-r border-gray-200 dark:border-border-dark glass-panel z-20 relative">
+<div class="p-6 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-glow">
+<span class="material-icons-round text-white text-lg">all_inclusive</span>
+</div>
+<div>
+<h1 class="font-bold text-lg tracking-tight text-gray-900 dark:text-white leading-none">Nexus AI</h1>
+<p class="text-xs text-primary font-medium tracking-wider mt-0.5">OPS CENTER</p>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto py-4 space-y-1 custom-scrollbar">
+<div class="px-4 mb-2">
+<p class="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-500 tracking-wider mb-2 px-2">Platform</p>
+<a class="nav-item-active flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium text-primary transition-all group" href="#">
+<span class="material-icons-round text-xl group-hover:scale-110 transition-transform">dashboard</span>
+                    Dashboard
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all group border-l-[3px] border-transparent" href="#">
+<span class="material-icons-round text-xl group-hover:text-primary transition-colors">timeline</span>
+                    ReAct Traces
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all group border-l-[3px] border-transparent" href="#">
+<span class="material-icons-round text-xl group-hover:text-primary transition-colors">travel_explore</span>
+                    Scraper
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all group border-l-[3px] border-transparent" href="#">
+<span class="material-icons-round text-xl group-hover:text-primary transition-colors">move_to_inbox</span>
+                    Data Ingestion
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all group border-l-[3px] border-transparent" href="#">
+<span class="material-icons-round text-xl group-hover:text-primary transition-colors">science</span>
+                    Tests &amp; Eval
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all group border-l-[3px] border-transparent" href="#">
+<span class="material-icons-round text-xl group-hover:text-primary transition-colors">bug_report</span>
+                    Agent Debugger
+                </a>
+</div>
+<div class="px-4 mt-8">
+<p class="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-500 tracking-wider mb-2 px-2">Configuration</p>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all group border-l-[3px] border-transparent" href="#">
+<span class="material-icons-round text-xl group-hover:text-secondary transition-colors">smart_toy</span>
+                    LLM &amp; Providers
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all group border-l-[3px] border-transparent" href="#">
+<span class="material-icons-round text-xl group-hover:text-secondary transition-colors">storage</span>
+                    RAG Configs
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all group border-l-[3px] border-transparent" href="#">
+<span class="material-icons-round text-xl group-hover:text-secondary transition-colors">extension</span>
+                    Tools &amp; Capabilities
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all group border-l-[3px] border-transparent" href="#">
+<span class="material-icons-round text-xl group-hover:text-secondary transition-colors">chat</span>
+                    Agent Prompts
+                </a>
+</div>
+</nav>
+<div class="p-4 border-t border-gray-200 dark:border-border-dark bg-gray-50 dark:bg-black/20">
+<div class="bg-gray-200 dark:bg-black/40 rounded-lg p-3 border border-gray-300 dark:border-white/5">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-semibold text-gray-500">API Status</span>
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>
+<span class="text-[10px] text-gray-400">High Load</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs font-semibold text-gray-500">Nexus Node</span>
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(0,220,130,0.6)]"></span>
+<span class="text-[10px] text-primary">Active</span>
+</div>
+</div>
+</div>
+<div class="mt-3 flex items-center gap-3 px-1">
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-gray-700 to-gray-600 flex items-center justify-center text-xs font-bold text-white border border-gray-500">
+                    AD
+                </div>
+<div class="flex flex-col">
+<span class="text-xs font-medium dark:text-white">Admin User</span>
+<span class="text-[10px] text-gray-500">admin@nexus.ai</span>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 flex flex-col relative overflow-hidden bg-background-light dark:bg-background-dark">
+<div class="absolute inset-0 z-0 opacity-30 pointer-events-none">
+<div class="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-secondary/10 rounded-full blur-[100px]"></div>
+<div class="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]"></div>
+</div>
+<header class="h-16 border-b border-gray-200 dark:border-border-dark glass-panel flex items-center justify-between px-8 z-10">
+<h2 class="text-xl font-semibold text-gray-800 dark:text-white tracking-tight">Nexus Ops Dashboard</h2>
+<div class="flex items-center gap-4">
+<button class="relative p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+<span class="material-icons-round">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-background-dark"></span>
+</button>
+<div class="h-6 w-px bg-gray-300 dark:bg-gray-700"></div>
+<button class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-white transition-colors">
+<span class="material-icons-round text-lg">help_outline</span>
+                    Documentation
+                </button>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto p-8 relative z-10 custom-scrollbar">
+<section class="mb-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-xl p-4 shadow-sm hover:border-primary/30 transition-colors group">
+<div class="flex items-start justify-between">
+<div>
+<p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Total Agents</p>
+<h3 class="text-2xl font-bold dark:text-white group-hover:text-primary transition-colors">124</h3>
+</div>
+<div class="p-2 bg-primary/10 rounded-lg text-primary">
+<span class="material-icons-round text-xl">smart_toy</span>
+</div>
+</div>
+<div class="mt-3 flex items-center text-xs text-primary font-medium">
+<span class="material-icons-round text-sm mr-1">trending_up</span>
+                        +12% vs last week
+                    </div>
+</div>
+<div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-xl p-4 shadow-sm hover:border-secondary/30 transition-colors group">
+<div class="flex items-start justify-between">
+<div>
+<p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">API Latency</p>
+<h3 class="text-2xl font-bold dark:text-white group-hover:text-secondary transition-colors">45ms</h3>
+</div>
+<div class="p-2 bg-secondary/10 rounded-lg text-secondary">
+<span class="material-icons-round text-xl">speed</span>
+</div>
+</div>
+<div class="mt-3 flex items-center text-xs text-secondary font-medium">
+<span class="material-icons-round text-sm mr-1">check_circle</span>
+                        Optimal Performance
+                    </div>
+</div>
+<div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-xl p-4 shadow-sm hover:border-purple-500/30 transition-colors group">
+<div class="flex items-start justify-between">
+<div>
+<p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Success Rate</p>
+<h3 class="text-2xl font-bold dark:text-white group-hover:text-purple-400 transition-colors">99.8%</h3>
+</div>
+<div class="p-2 bg-purple-500/10 rounded-lg text-purple-400">
+<span class="material-icons-round text-xl">task_alt</span>
+</div>
+</div>
+<div class="mt-3 flex items-center text-xs text-gray-400 font-medium">
+<span class="material-icons-round text-sm mr-1">remove</span>
+                         Stable
+                    </div>
+</div>
+<div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-xl p-4 shadow-sm hover:border-orange-500/30 transition-colors group">
+<div class="flex items-start justify-between">
+<div>
+<p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Tokens Usage</p>
+<h3 class="text-2xl font-bold dark:text-white group-hover:text-orange-400 transition-colors">2.4M</h3>
+</div>
+<div class="p-2 bg-orange-500/10 rounded-lg text-orange-400">
+<span class="material-icons-round text-xl">token</span>
+</div>
+</div>
+<div class="mt-3 flex items-center text-xs text-orange-400 font-medium">
+<span class="material-icons-round text-sm mr-1">warning</span>
+                         Near Limit (85%)
+                    </div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2 flex flex-col gap-4">
+<div class="glass-panel rounded-xl border border-gray-200 dark:border-border-dark overflow-hidden flex flex-col h-[500px] shadow-lg">
+<div class="bg-gray-100 dark:bg-[#1A2333] px-4 py-3 border-b border-gray-200 dark:border-border-dark flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-icons-round text-gray-400">terminal</span>
+<h3 class="font-medium text-sm text-gray-700 dark:text-gray-200">Live API Terminal</h3>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-xs text-gray-500 hover:text-white transition-colors">Clear</button>
+<div class="flex items-center gap-2 px-2 py-1 bg-primary/10 rounded border border-primary/20">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-[10px] font-bold text-primary tracking-wide">LISTENING</span>
+</div>
+</div>
+</div>
+<div class="flex-1 bg-[#090C13] p-4 font-mono text-xs md:text-sm text-gray-300 overflow-y-auto custom-scrollbar relative">
+<div class="space-y-2">
+<div class="text-gray-500 italic mb-4">// Awaiting incoming API connections...</div>
+<div class="flex gap-2 opacity-80">
+<span class="text-gray-600 select-none">14:02:23</span>
+<span class="text-blue-400">INFO</span>
+<span>Initialized agent wrapper <span class="text-yellow-300">"CustomerSupport_v2"</span></span>
+</div>
+<div class="flex gap-2">
+<span class="text-gray-600 select-none">14:02:25</span>
+<span class="text-primary">SUCCESS</span>
+<span>Database connection established (Postgres:5432)</span>
+</div>
+<div class="flex gap-2 opacity-60">
+<span class="text-gray-600 select-none">14:02:45</span>
+<span class="text-gray-400">DEBUG</span>
+<span>Vector store sync starting...</span>
+</div>
+<div class="flex gap-2">
+<span class="text-gray-600 select-none">14:03:01</span>
+<span class="text-purple-400">POST</span>
+<span>/v1/chat/completions <span class="text-gray-500">- 200 OK - 342ms</span></span>
+</div>
+<div class="pl-20 text-gray-500 text-xs font-mono">
+                                    { "model": "gpt-4-turbo", "tokens": 128, "status": "completed" }
+                                </div>
+<div class="flex gap-2 mt-4">
+<span class="text-gray-600 select-none">14:03:12</span>
+<span class="text-blue-400">INFO</span>
+<span>Recalibrating context window for session <span class="text-white underline decoration-dashed">#88219</span></span>
+</div>
+<div class="flex gap-2 mt-1">
+<span class="text-gray-600 select-none">14:03:15</span>
+<span class="text-primary"> &gt; </span>
+<span class="terminal-blink w-2 h-5 bg-primary block"></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<div class="glass-panel rounded-xl border border-gray-200 dark:border-border-dark p-1 shadow-lg h-full flex flex-col">
+<div class="p-4 border-b border-gray-200 dark:border-border-dark flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-icons-round text-secondary">play_arrow</span>
+<h3 class="font-semibold text-gray-800 dark:text-white">Service Controls</h3>
+</div>
+<button class="p-1 hover:bg-gray-100 dark:hover:bg-white/10 rounded transition">
+<span class="material-icons-round text-gray-500 text-sm">more_horiz</span>
+</button>
+</div>
+<div class="p-4 space-y-4 flex-1">
+<div class="bg-gray-50 dark:bg-black/40 border border-emerald-900/30 rounded-lg p-4 relative overflow-hidden group hover:border-primary/50 transition-colors">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<div class="flex justify-between items-center mb-2 relative z-10">
+<div class="flex items-center gap-3">
+<div class="p-1.5 rounded bg-primary/10 text-primary">
+<span class="material-icons-round text-lg">dns</span>
+</div>
+<span class="font-medium text-sm dark:text-gray-200">Postgres DB</span>
+</div>
+<button class="flex items-center gap-1 px-2 py-1 rounded border border-red-500/30 text-red-400 bg-red-500/10 hover:bg-red-500/20 text-xs transition-colors">
+<span class="material-icons-round text-[14px]">stop_circle</span>
+                                        Stop
+                                    </button>
+</div>
+<div class="flex items-center justify-between text-xs text-gray-500 relative z-10">
+<span>Uptime: 14d 2h</span>
+<span class="flex items-center gap-1 text-primary"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Healthy</span>
+</div>
+<div class="absolute bottom-0 right-0 left-0 h-8 opacity-10">
+<svg class="w-full h-full text-primary fill-current" preserveAspectRatio="none" viewBox="0 0 100 20">
+<path d="M0,15 Q10,5 20,10 T40,12 T60,5 T80,8 T100,15 V20 H0 Z"></path>
+</svg>
+</div>
+</div>
+<div class="bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-border-dark rounded-lg p-4 relative overflow-hidden group hover:border-gray-600 transition-colors">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-gray-600"></div>
+<div class="flex justify-between items-center mb-2 relative z-10">
+<div class="flex items-center gap-3">
+<div class="p-1.5 rounded bg-gray-700/50 text-gray-300">
+<span class="material-icons-round text-lg">api</span>
+</div>
+<span class="font-medium text-sm dark:text-gray-200">FastAPI Backend</span>
+</div>
+<button class="flex items-center gap-1 px-2 py-1 rounded border border-gray-600 text-gray-300 hover:bg-white/5 text-xs transition-colors">
+<span class="material-icons-round text-[14px]">play_arrow</span>
+                                        Start
+                                    </button>
+</div>
+<div class="flex items-center justify-between text-xs text-gray-500 relative z-10">
+<span>Status: Stopped</span>
+<span class="flex items-center gap-1 text-gray-500"><span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> Offline</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="glass-panel border border-gray-200 dark:border-border-dark rounded-xl p-6">
+<div class="flex items-center justify-between mb-4">
+<h4 class="text-sm font-semibold text-gray-700 dark:text-gray-200">Recent Deployments</h4>
+<a class="text-xs text-primary hover:underline" href="#">View All</a>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between text-sm py-2 border-b border-gray-700/20 last:border-0">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="text-gray-300">v2.4.0 - Hotfix</span>
+</div>
+<span class="text-xs text-gray-500">2h ago</span>
+</div>
+<div class="flex items-center justify-between text-sm py-2 border-b border-gray-700/20 last:border-0">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="text-gray-300">v2.3.9 - Model Update</span>
+</div>
+<span class="text-xs text-gray-500">1d ago</span>
+</div>
+<div class="flex items-center justify-between text-sm py-2 border-b border-gray-700/20 last:border-0">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-gray-500"></span>
+<span class="text-gray-400 line-through">v2.3.8 - Failed</span>
+</div>
+<span class="text-xs text-gray-500">2d ago</span>
+</div>
+</div>
+</div>
+<div class="glass-panel border border-gray-200 dark:border-border-dark rounded-xl p-6">
+<div class="flex items-center justify-between mb-4">
+<h4 class="text-sm font-semibold text-gray-700 dark:text-gray-200">Cluster Resources</h4>
+<span class="material-icons-round text-gray-500 text-sm">more_vert</span>
+</div>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-gray-400">CPU Usage</span>
+<span class="text-white">78%</span>
+</div>
+<div class="w-full bg-gray-700 rounded-full h-1.5">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 78%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-gray-400">Memory</span>
+<span class="text-white">42%</span>
+</div>
+<div class="w-full bg-gray-700 rounded-full h-1.5">
+<div class="bg-purple-500 h-1.5 rounded-full" style="width: 42%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-gray-400">Storage</span>
+<span class="text-white">12%</span>
+</div>
+<div class="w-full bg-gray-700 rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 12%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer class="mt-8 text-center">
+<p class="text-[10px] text-gray-600 dark:text-gray-600">Nexus Ops Dashboard v2.4.0 © 2023</p>
+</footer>
+</div>
+</main>
+</body></html>

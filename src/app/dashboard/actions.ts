@@ -16,11 +16,72 @@ async function backendFetch(path: string, options?: RequestInit) {
 
 export async function fetchOpsStatus() {
     try {
-        const res = await backendFetch("/api/ops/status", { next: { revalidate: 10 } } as any);
+        const res = await backendFetch("/api/ops/status", { cache: "no-store" });
+        if (!res.ok) throw new Error("API returned " + res.status);
+        const data = await res.json();
+        return { ...data, debug_url: BACKEND_URL };
+    } catch (e: any) {
+        return { status: "offline", agent_initialized: false, db_status: "unknown", debug_url: BACKEND_URL, error: e.message || "Unknown error" };
+    }
+}
+
+export async function fetchOpsMetrics() {
+    try {
+        const res = await backendFetch("/api/ops/metrics", { cache: "no-store" });
         if (!res.ok) throw new Error("Failed");
         return await res.json();
     } catch {
-        return { status: "offline", agent_initialized: false };
+        return {
+            total_agents: 0,
+            tokens_usage: "0",
+            cpu_usage: 0,
+            memory_usage: 0,
+            storage_usage: 0
+        };
+    }
+}
+
+export async function getSystemResources() {
+    try {
+        const res = await backendFetch("/api/ops/resources", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to fetch resources");
+        return await res.json();
+    } catch (error) {
+        console.error("Resources error:", error);
+        return { cpu: 0, memory: 0, storage: 0 };
+    }
+}
+
+export async function getTokenUsage() {
+    try {
+        const res = await backendFetch("/api/ops/token-usage", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to fetch token usage");
+        return await res.json();
+    } catch (error) {
+        console.error("Token usage error:", error);
+        return { total_input: 0, total_output: 0, total_tokens: 0, conversations: [] };
+    }
+}
+
+export async function getRagStats() {
+    try {
+        const res = await backendFetch("/api/ops/rag-stats", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to fetch RAG stats");
+        return await res.json();
+    } catch (error) {
+        console.error("RAG stats error:", error);
+        return { total_chunks: 0, sources: [] };
+    }
+}
+
+export async function getAnalyticsTopics() {
+    try {
+        const res = await backendFetch("/api/ops/analytics/topics", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to fetch analytics topics");
+        return await res.json();
+    } catch (error) {
+        console.error("Analytics topics error:", error);
+        return { topics: [] };
     }
 }
 
@@ -180,7 +241,7 @@ export async function sendTerminalInput(input: string) {
     try {
         const res = await backendFetch("/api/ops/terminal", {
             method: "POST",
-            body: JSON.stringify({ action: "input", input }),
+            body: JSON.stringify({ action: "input", input: input + "\n" }),
         });
         return await res.json();
     } catch {

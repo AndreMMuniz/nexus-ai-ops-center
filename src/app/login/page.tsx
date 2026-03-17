@@ -1,7 +1,45 @@
-import { signIn } from "@/auth";
-import { Mail, Lock, LogIn, Fingerprint, Building2, ShieldCheck, Activity } from "lucide-react";
+"use client";
+
+import { useState } from 'react';
+import { Mail, Lock, LogIn, Fingerprint, Building2, ShieldCheck } from "lucide-react";
+import { NexusLogo } from "@/components/NexusLogo";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+    const [errorMessage, setErrorMessage] = useState("");
+    const [isPending, setIsPending] = useState(false);
+    const router = useRouter();
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsPending(true);
+        setErrorMessage("");
+
+        const formData = new FormData(e.currentTarget);
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+
+        try {
+            const result = await signIn("credentials", {
+                email,
+                password,
+                redirect: false,
+            });
+
+            if (result?.error) {
+                setErrorMessage("Invalid credentials.");
+            } else if (result?.ok) {
+                router.push("/dashboard");
+                router.refresh();
+            }
+        } catch (error) {
+            setErrorMessage("Something went wrong.");
+        } finally {
+            setIsPending(false);
+        }
+    };
+
     return (
         <div className="bg-[#0B0F19] font-sans antialiased h-screen overflow-hidden flex items-center justify-center relative selection:bg-[#00DC82] selection:text-black">
 
@@ -25,11 +63,8 @@ export default function LoginPage() {
 
             <main className="w-full max-w-md mx-4 relative z-10">
                 <div className="flex flex-col items-center justify-center mb-8">
-                    <div className="w-16 h-16 rounded-2xl p-[1px] mb-4" style={{ background: 'linear-gradient(to bottom right, #00DC82, #3B82F6)', boxShadow: '0 0 25px -5px rgba(59, 130, 246, 0.4)' }}>
-                        <div className="w-full h-full rounded-2xl bg-[#0B0F19] flex items-center justify-center relative overflow-hidden">
-                            <div className="absolute inset-0 blur-sm" style={{ background: 'linear-gradient(to bottom right, rgba(0, 220, 130, 0.2), rgba(59, 130, 246, 0.2))' }}></div>
-                            <Activity className="text-[#00DC82] relative z-10" size={32} />
-                        </div>
+                    <div className="mb-4" style={{ filter: 'drop-shadow(0 0 25px rgba(0, 220, 130, 0.3))' }}>
+                        <NexusLogo size={64} className="rounded-2xl" />
                     </div>
                     <h1 className="text-3xl font-bold text-white tracking-tight">Nexus AI</h1>
                     <p className="text-sm text-gray-400 font-mono mt-1 tracking-wider uppercase">Ops Center Access</p>
@@ -42,10 +77,7 @@ export default function LoginPage() {
                     </div>
 
                     <form
-                        action={async (formData) => {
-                            "use server";
-                            await signIn("credentials", formData);
-                        }}
+                        onSubmit={handleSubmit}
                         className="space-y-5"
                     >
                         <div className="group">
@@ -94,16 +126,23 @@ export default function LoginPage() {
                             </div>
                         </div>
 
+                        {errorMessage && (
+                            <div className="text-sm text-red-500 text-center font-medium bg-red-500/10 py-2 rounded-lg border border-red-500/20">
+                                {errorMessage}
+                            </div>
+                        )}
+
                         <div>
                             <button
                                 className="group relative w-full flex justify-center py-2.5 px-4 text-sm font-semibold rounded-lg text-white transition-all shadow-lg hover:shadow-blue-500/25 active:scale-[0.98]"
                                 style={{ background: 'linear-gradient(to right, #059669, #2563eb)' }}
                                 type="submit"
+                                aria-disabled={isPending}
                             >
                                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                                     <LogIn className="text-white/50 group-hover:text-white transition-colors w-5 h-5" />
                                 </span>
-                                Sign In
+                                {isPending ? "Authenticating..." : "Sign In"}
                                 <div className="absolute inset-0 rounded-lg ring-1 ring-inset ring-white/20 group-hover:ring-white/30"></div>
                             </button>
                         </div>
